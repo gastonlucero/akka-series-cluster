@@ -5,7 +5,8 @@ import com.typesafe.config.ConfigFactory
 
 object NodoRemoto extends App {
 
-  //Inicia en el puerto 2551, sin actores todavia en su ActorSystem
+  //Inicia en el puerto 2551, sin actores todavia en su ActorSystem, esta
+  //en un estado IDLE podriamos decir
   val actorSystem = ActorSystem("NodoRemotoActorSystem", ConfigFactory.load("remote1"))
 }
 
