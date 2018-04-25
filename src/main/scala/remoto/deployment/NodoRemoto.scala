@@ -20,6 +20,8 @@ class ActorDeploy extends Actor {
     case msg: Int =>
       if(msg > 9) {
         println(s"Detenido")
+        //Con kill, se detiene y ejecuta el metodo postStop, y a la vez que en el actor deployRemoto recibe el mensaje
+        //Terminated
         self ! Kill
       }
       else println(s"Numero $msg")

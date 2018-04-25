@@ -6,6 +6,7 @@ import akka.actor.{Actor, ActorSystem, AddressFromURIString, Deploy, Props, Term
 import akka.remote.RemoteScope
 import com.typesafe.config.ConfigFactory
 import remoto.deployment.NodoDeployment.actorSystem
+
 import scala.concurrent.duration._
 
 object NodoDeployment extends App {
@@ -32,11 +33,16 @@ class ActorDeployment extends Actor {
   override def preStart(): Unit = {
     context.watch(actorRemoto) //"Vigilamos" al actor remoto, y nos enteramos de cambios de estado
     //Mandamos numeros al actor remoto
-    context.system.scheduler.schedule(1 seconds, 5 seconds)(() => actorRemoto ! getValue())
+    context.system.scheduler.schedule(1 seconds, 5 seconds, new Runnable {
+      def run(): Unit = {
+        actorRemoto ! getValue()
+      }
+    })
   }
 
   override def receive: Receive = {
-    case Terminated(m) => {  //Cuando el actor remoto se detenga nos enteramos
+    //Cuando el actor remoto se detenga nos enteramos
+    case Terminated(m) => {
       println(s"Actor detenido $m")
     }
   }

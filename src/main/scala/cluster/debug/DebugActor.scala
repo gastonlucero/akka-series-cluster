@@ -8,6 +8,9 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 
 import scala.collection.mutable
 
+/**
+  * Actor que hace el debug de los workflows,cuando se detiene se envia un Kill para detenerse
+  */
 class DebugActor extends Actor {
 
   lazy val ssc = {
@@ -29,11 +32,12 @@ class DebugActor extends Actor {
       val dstream = ssc.queueStream(lines)
       dstream.map(_.toUpperCase).foreachRDD(r => r.foreach(println))
       ssc.start()
-      for(i<- 1 to 10){
+      for (i <- 1 to 10) {
         lines += ssc.sparkContext.makeRDD(Seq(msg.input))
         Thread.sleep(1000)
       }
       ssc.stop()
+      //Sender es el apiActor remoto, por el forward que usamos en DebugNodeActor
       sender() ! msg.address.get
       self ! Kill
     }

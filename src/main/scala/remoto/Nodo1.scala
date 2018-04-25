@@ -1,6 +1,6 @@
 package remoto
 
-import akka.actor.{Actor, ActorLogging, ActorSystem, Props}
+import akka.actor.{Actor, ActorSystem, Props}
 import com.typesafe.config.ConfigFactory
 
 //Mensajes que se enviaran entre ellos
@@ -16,7 +16,7 @@ object Nodo1 extends App {
   actorRemoto1 ! "Hola"
 }
 
-class ActorNodo1 extends Actor with ActorLogging {
+class ActorNodo1 extends Actor {
 
   override def preStart(): Unit = {
     println(s"Hola soy el actor ${self.path}, address ${self.path.address}")

@@ -16,9 +16,14 @@ import scala.concurrent.duration._
 
 case class WorkflowDebug(userId: String, workFlowId: String, input: String, transformation: String, output: String, address: Option[String] = None)
 
+/**
+  * Levatar esta clase para que se inicia el primer seedNode
+  */
 object MainApi1 extends App with SprayJsonSupport with DefaultJsonProtocol {
 
   val config = ConfigFactory.load("cluster1")
+  /* El actor system se tiene que llamar igual en todos los nodos que participen del cluster*/
+
   implicit val system: ActorSystem = ActorSystem("StratioClusterSystem", config)
   implicit val dispatcher = system.dispatcher
   implicit val materializer: ActorMaterializer = ActorMaterializer()
