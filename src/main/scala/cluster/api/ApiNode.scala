@@ -22,8 +22,10 @@ class ApiNode extends Actor with ActorLogging {
 
   def receive = {
     case MemberUp(member) ⇒ {
-      if (member.hasRole("debugRole"))
+      if (member.hasRole("debugRole")) {
         debugActorsLibres.put(member.uniqueAddress.toString, context.actorSelection(RootActorPath(member.address) / "user" / "debugNodeActor"))
+        println(s"ActoresDebug libres para ejecucion ${debugActorsLibres.size}")
+      }
       log.info("Member is Up: {}", member.address)
     }
     case wd: WorkflowDebug => {
@@ -33,6 +35,8 @@ class ApiNode extends Actor with ActorLogging {
         sender() ! "Trabajo en cola"
         debugActorsLibres = debugActorsLibres.tail
         debugActorsOcupados.put(actor._1, actor._2)
+        println(s"ActoresDebug libres para ejecucion ${debugActorsLibres.size}")
+        println(s"ActoresDebug ocupados en ejecucion ${debugActorsOcupados.size}")
       } else
         sender() ! "No hay contextos spark libres"
     }
@@ -40,6 +44,8 @@ class ApiNode extends Actor with ActorLogging {
       val actorSelectionLibre = debugActorsOcupados.get(msg).get
       debugActorsLibres.put(msg, actorSelectionLibre)
       debugActorsOcupados.remove(msg)
+      println(s"ActoresDebug libres para ejecucion ${debugActorsLibres.size}")
+      println(s"ActoresDebug ocupados en ejecucion ${debugActorsOcupados.size}")
     }
 
 
